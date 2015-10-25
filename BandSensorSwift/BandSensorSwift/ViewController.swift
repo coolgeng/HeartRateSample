@@ -2,11 +2,11 @@
 //  ViewController.swift
 //  BandSensorSwift
 //
-//  Created by Mark Thistle on 4/7/15.
-//  Copyright (c) 2015 New Thistle LLC. All rights reserved.
-//
+//  Created by Cooper on 10/10/15.
+
 
 import UIKit
+
 
 class ViewController: UIViewController, MSBClientManagerDelegate {
 
@@ -38,25 +38,60 @@ class ViewController: UIViewController, MSBClientManagerDelegate {
                 self.output("Band is not connected. Please wait....")
                 return
             }
-            client.sensorManager.startAccelerometerUpdatesToQueue(nil, errorRef: nil, withHandler: { (accelerometerData: MSBSensorAccelData!, error: NSError!) in
-                self.accelLabel.text = NSString(format: "Accel Data: X=%+0.2f Y=%+0.2f Z=%+0.2f", accelerometerData.x, accelerometerData.y, accelerometerData.z) as String
+            
+            
+               try! client.sensorManager.startHearRateUpdatesToQueue(NSOperationQueue(), withHandler: { (hrmData: MSBSensorHeartRateData!, error: NSError!) in
+                    if error != nil {
+                        print("Error retrieving Heart Rate: \(error.description)")
+                    }
+                    print("heart rate is: ")
+                    print(hrmData.heartRate)
+            
+            
+//                switch (hrmData.quality) {
+//                case MSBSensorHeartRateQuality.Acquiring:
+//                    quality = "Acquiring"
+//                case MSBSensorHeartRateQuality.Locked:
+//                    quality = "Locked"
+//                default:
+//                    quality = "Unknown"
+//                }
+//                self.hrmQualityLabel.text = quality
+//                self.bpmLabel.text = NSString(format: "%d", hrmData.heartRate) as String
             })
+            
+//            do {
+//                try client.sensorManager.startAccelerometerUpdatesToQueue(NSOperationQueue(),  withHandler: { (accelerometerData: MSBSensorAccelData!, error: NSError!) in
+//                    self.accelLabel.text = NSString(format: "Accel Data: X=%+0.2f Y=%+0.2f Z=%+0.2f", accelerometerData.x, accelerometerData.y, accelerometerData.z) as String
+//                })
+//            } catch {
+//                print ("aaaaaaaa")
+//                print(error)
+//            }
+            
     
             //Stop Accel updates after 60 seconds
-            let delay = 60.0 * Double(NSEC_PER_SEC)
-            var time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-            dispatch_after(time, dispatch_get_main_queue(), {
-                self.output("Stopping Accelerometer updates...")
-                if let client = self.client {
-                    client.sensorManager.stopAccelerometerUpdatesErrorRef(nil)
-                }
-            })
+//            let delay = 60.0 * Double(NSEC_PER_SEC)
+//            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+//            dispatch_after(time, dispatch_get_main_queue(), {
+//                self.output("Stopping Accelerometer updates...")
+//                if let client = self.client {
+//                    do {
+//                        try client.sensorManager.stopAccelerometerUpdatesErrorRef()
+//                    } catch {
+//                        print ("bbbbbbb")
+//                        print(error)
+//                    }
+//
+//                }
+//            })
         } else {
             self.output("Band is not connected. Please wait....")
         }
     }
     
     func output(message: String) {
+        print ("Doctor Heart start!")
         self.txtOutput.text = NSString(format: "%@\n%@", self.txtOutput.text, message) as String
         let p = self.txtOutput.contentOffset
         self.txtOutput.setContentOffset(p, animated: false)
