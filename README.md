@@ -16,7 +16,7 @@ Download, build and run.
 
 ## Authors
 
-Mark Thistle, http://droolfactory.blogspot.com
+Cooper
 
 ## About the Code
 
